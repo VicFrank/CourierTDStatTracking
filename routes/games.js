@@ -6,13 +6,8 @@ const games = require("../db/games");
 router.get("/", async (req, res) => {
   try {
     const limit = 100;
-    if (pastHours) {
-      const gameInfo = await games.getGames(limit);
-      return res.status(200).json(gameInfo);
-    } else {
-      const gameInfo = await games.getGames(limit);
-      return res.status(200).json(gameInfo);
-    }
+    const gameInfo = await games.getGames(limit);
+    return res.status(200).json(gameInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: "Server Error" });
