@@ -27,7 +27,7 @@ module.exports = {
       LIMIT 100
       `;
       const { rows } = await query(sql_query);
-      return rows.length > 0;
+      return rows;
     } catch (error) {
       throw error;
     }
