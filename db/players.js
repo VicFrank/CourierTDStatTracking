@@ -26,7 +26,7 @@ module.exports = {
       ORDER BY mmr DESC
       LIMIT 100
       `;
-      const { rows } = await query(sql_query, [steamID]);
+      const { rows } = await query(sql_query);
       return rows.length > 0;
     } catch (error) {
       throw error;
