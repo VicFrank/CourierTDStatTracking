@@ -74,15 +74,15 @@ module.exports = {
     }
   },
 
-  async upsertPlayer(steamID, username) {
+  async upsertPlayer(steamID, steamID64, username) {
     try {
       const { rows } = await query(
-        `INSERT INTO players(steam_id, username)
-         values ($1, $2)
-         on conflict(steam_id)
-         do UPDATE SET username = $2
+        `INSERT INTO players(steam_id, steam_id_64, username)
+         VALUES ($1, $2, $3)
+         ON CONFLICT(steam_id)
+         DO UPDATE SET steam_id_64 = $2, username = $3
          RETURNING *`,
-        [steamID, username]
+        [steamID, steamID64, username]
       );
       return rows[0];
     } catch (error) {
@@ -109,12 +109,7 @@ module.exports = {
       LIMIT $2 OFFSET $3;
       `;
       if (hours) {
-        const { rows } = await query(sql_query, [
-          steamID,
-          limit,
-          offset,
-          hours,
-        ]);
+        const { rows } = await query(sql_query, [steamID, limit, offset, hours]);
         return rows;
       } else {
         const { rows } = await query(sql_query, [steamID, limit, offset]);

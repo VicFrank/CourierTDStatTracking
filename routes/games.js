@@ -28,9 +28,7 @@ router.get("/:gameID", async (req, res) => {
 router.post("/addGamePlayer", async (req, res) => {
   const { server_key, data } = req.body;
 
-  const dedicatedServerKey = process.env.IS_PRODUCTION
-    ? keys.dedicatedServerKey
-    : keys.toolsKey;
+  const dedicatedServerKey = process.env.IS_PRODUCTION ? keys.dedicatedServerKey : keys.toolsKey;
 
   if (server_key != dedicatedServerKey) {
     res.status(403).send({ message: `You are not authorized to add data` });
@@ -39,10 +37,10 @@ router.post("/addGamePlayer", async (req, res) => {
 
   try {
     const parsedData = JSON.parse(data);
-    await games.createGamePlayer(parsedData);
-    res.status(201).send({ message: `Added game player` });
+    const result = await games.createGamePlayer(parsedData);
+    res.status(201).json(result);
   } catch (error) {
-    // console.log(req.body.data);
+    console.log(req.body.data);
     console.error(error);
     res.status(500).send({ message: "Server Error" });
   }
@@ -51,9 +49,7 @@ router.post("/addGamePlayer", async (req, res) => {
 router.post("/addGameDuration", async (req, res) => {
   const { server_key, data } = req.body;
 
-  const dedicatedServerKey = process.env.IS_PRODUCTION
-    ? keys.dedicatedServerKey
-    : keys.toolsKey;
+  const dedicatedServerKey = process.env.IS_PRODUCTION ? keys.dedicatedServerKey : keys.toolsKey;
 
   if (server_key != dedicatedServerKey) {
     res.status(403).send({ message: `You are not authorized to add data` });

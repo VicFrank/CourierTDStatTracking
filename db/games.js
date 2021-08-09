@@ -4,20 +4,17 @@ const Players = require("./players");
 
 module.exports = {
   async createGamePlayer(event) {
-    const { matchID, steamID, username, ranked, place, rounds, players } =
-      event;
+    const { matchID, steamID, steamID64, username, ranked, place, rounds, players } = event;
 
     try {
       await this.upsertGame(matchID, ranked);
-      const player = await Players.upsertPlayer(steamID, username);
+      const player = await Players.upsertPlayer(steamID, steamID64, username);
       const currentMMR = player.mmr;
       let mmrChange = 0;
 
       if (ranked) {
         const winners = players.filter((p) => !p.hasLost);
-        const losers = players.filter(
-          (p) => p.hasLost && p.steamID !== steamID
-        );
+        const losers = players.filter((p) => p.hasLost && p.steamID !== steamID);
 
         mmrChange = getMatchRatingChange(currentMMR, winners, losers);
       }
@@ -27,6 +24,8 @@ module.exports = {
          values ($1, $2, $3, $4, $5)`,
         [matchID, steamID, rounds, place, mmrChange]
       );
+
+      return { matchID, steamID, mmrChange };
     } catch (error) {
       throw error;
     }
@@ -34,10 +33,7 @@ module.exports = {
 
   async setGameDuration(matchID, duration) {
     try {
-      await query(`UPDATE GAMES SET duration = $2 WHERE game_id = $1`, [
-        matchID,
-        duration,
-      ]);
+      await query(`UPDATE GAMES SET duration = $2 WHERE game_id = $1`, [matchID, duration]);
     } catch (error) {
       throw error;
     }
