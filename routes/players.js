@@ -18,6 +18,9 @@ router.get("/:steamid", async (req, res) => {
   try {
     const steamid = req.params.steamid;
     const playerInfo = await players.getPlayer(steamid);
+    if (!playerInfo) {
+      res.status(404).send({ message: "Player not found" });
+    }
     res.status(200).json(playerInfo);
   } catch (error) {
     console.log(error);

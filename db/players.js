@@ -39,7 +39,7 @@ module.exports = {
       SELECT count(*) FROM players WHERE mmr > $1
       `;
       const { rows } = await query(sql_query, [mmr]);
-      return rows[0] + 1;
+      return parseInt(rows[0].count) + 1;
     } catch (error) {
       throw error;
     }
@@ -48,7 +48,7 @@ module.exports = {
   async getPlayer(steamID) {
     try {
       const sql_query = `
-      SELECT * FROM players WHERE steam_id = $1
+      SELECT * FROM players WHERE steam_id_64 = $1
       `;
       const { rows } = await query(sql_query, [steamID]);
       const player = rows[0];

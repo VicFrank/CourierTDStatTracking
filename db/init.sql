@@ -14,7 +14,7 @@ CREATE INDEX ix_games_created_at ON games (created_at);
 
 CREATE TABLE IF NOT EXISTS players (
   steam_id TEXT PRIMARY KEY,
-  steam_id_64 TEXT,
+  steam_id_64 TEXT UNIQUE,
   mmr INT DEFAULT 1000,
   username TEXT
 );
